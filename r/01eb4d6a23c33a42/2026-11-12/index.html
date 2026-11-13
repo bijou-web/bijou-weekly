@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bijou Getaways — Weekly Team Progress</title>
+<style>
+  :root {
+    --ink: #1a2332;
+    --muted: #5b6b7c;
+    --line: #d8e0ea;
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --accent: #1e4d6b;
+    --accent-soft: #e8f1f6;
+    --good: #1f7a4d;
+    --good-bg: #e6f5ed;
+    --bad: #b42318;
+    --bad-bg: #fdecea;
+    --flat: #5b6b7c;
+    --flat-bg: #eef2f6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink); background: var(--bg); line-height: 1.45;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; }
+  header.top {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 16px; margin-bottom: 22px; flex-wrap: wrap;
+  }
+  header.top h1 { margin: 0; font-size: 1.65rem; letter-spacing: -0.02em; color: var(--accent); }
+  header.top .sub { color: var(--muted); font-size: 0.95rem; }
+  .badge {
+    background: var(--accent); color: #fff; font-size: 0.78rem; font-weight: 600;
+    padding: 6px 10px; border-radius: 999px; letter-spacing: 0.02em;
+  }
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px;
+  }
+  @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .kpi-grid { grid-template-columns: 1fr; } }
+  .kpi {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; min-height: 108px;
+    border-left: 4px solid var(--line);
+  }
+  .kpi.dir-good { border-left-color: var(--good); background: linear-gradient(90deg, var(--good-bg) 0%, var(--card) 28%); }
+  .kpi.dir-bad { border-left-color: var(--bad); background: linear-gradient(90deg, var(--bad-bg) 0%, var(--card) 28%); }
+  .kpi.dir-flat { border-left-color: #9aa8b8; }
+  .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .kpi-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .kpi-value { font-size: 1.9rem; font-weight: 700; margin-top: 4px; color: var(--accent); }
+  .kpi.dir-good .kpi-value { color: var(--good); }
+  .kpi.dir-bad .kpi-value { color: var(--bad); }
+  .kpi-note { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+  .dir-pill {
+    flex-shrink: 0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+    text-transform: uppercase; padding: 4px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .dir-pill.good { color: var(--good); background: var(--good-bg); }
+  .dir-pill.bad { color: var(--bad); background: var(--bad-bg); }
+  .dir-pill.flat { color: var(--flat); background: var(--flat-bg); }
+  h2.section {
+    margin: 8px 0 14px; font-size: 1.15rem; color: var(--ink);
+    border-bottom: 2px solid var(--accent-soft); padding-bottom: 8px;
+  }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 14px; margin: -6px 0 16px;
+    font-size: 0.82rem; color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch {
+    width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+  }
+  .swatch.good { background: var(--good); }
+  .swatch.bad { background: var(--bad); }
+  .swatch.flat { background: #9aa8b8; }
+  .regions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 800px) { .regions { grid-template-columns: 1fr; } }
+  .region-card {
+    background: var(--card); border: 2px solid var(--line); border-radius: 14px;
+    padding: 16px 18px; box-shadow: 0 1px 0 rgba(26,35,50,0.03);
+  }
+  .region-card header { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .region-card h2 { margin: 0; font-size: 1.2rem; }
+  .owner { margin: 4px 0 0; color: var(--muted); font-size: 0.88rem; }
+  .region-stats { display: flex; gap: 14px; text-align: right; }
+  .region-stats .label { display: block; font-size: 0.72rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.04em; }
+  .region-stats .num { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
+
+  .region-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .region-stats .num.good { color: var(--good); }
+  .region-stats .num.bad { color: var(--bad); }
+  .region-stats .num.flat { color: var(--flat); }
+  .region-stats .stat-dir { display: block; font-size: 0.65rem; font-weight: 700; margin-top: 2px; }
+  .region-stats .stat-dir.good { color: var(--good); }
+  .region-stats .stat-dir.bad { color: var(--bad); }
+  .region-stats .stat-dir.flat { color: var(--flat); }
+  .breakdown { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+  .breakdown li { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; border-bottom: 1px dashed var(--line); padding-bottom: 4px; }
+  .breakdown li.muted { color: var(--muted); grid-column: 1 / -1; border: none; }
+  .note-box {
+    margin-top: 18px; background: var(--accent-soft); border-left: 4px solid var(--accent);
+    padding: 12px 14px; border-radius: 0 10px 10px 0; color: #243447; font-size: 0.92rem;
+  }
+  footer {
+    margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 0.88rem; display: grid; gap: 6px;
+  }
+  footer a { color: var(--accent); }
+
+  .tabs {
+    display: flex; gap: 6px; margin: 0 0 22px; border-bottom: 2px solid var(--line);
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    appearance: none; border: 1px solid transparent; background: transparent;
+    color: var(--muted); font: inherit; font-weight: 600; font-size: 0.95rem;
+    padding: 10px 16px; border-radius: 10px 10px 0 0; cursor: pointer;
+    margin-bottom: -2px; border-bottom: 2px solid transparent;
+  }
+  .tab-btn:hover { color: var(--accent); background: var(--accent-soft); }
+  .tab-btn.active {
+    color: var(--accent); background: var(--card);
+    border-color: var(--line) var(--line) var(--card);
+    border-bottom-color: var(--card);
+  }
+  .tab-panel[hidden] { display: none; }
+  .issue-summary {
+    display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px;
+  }
+  .pill {
+    font-size: 0.85rem; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card);
+  }
+  .pill strong { font-size: 1.05rem; margin: 0 4px; }
+  .pill span { color: var(--muted); }
+  .stuck-pill { border-left: 4px solid #c47d0e; background: #fff8e8; }
+  .up-pill { border-left: 4px solid var(--bad); background: var(--bad-bg); }
+  .down-pill { border-left: 4px solid var(--good); background: var(--good-bg); }
+  .issue-intro { color: var(--muted); font-size: 0.9rem; margin: 0 0 16px; }
+  .issue-block { margin-top: 14px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); }
+  .issue-block h3 { margin: 0 0 8px; font-size: 0.95rem; }
+  .issue-block h4 { margin: 10px 0 6px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  .issue-block .count { font-weight: 600; color: var(--muted); font-size: 0.85rem; }
+  .issue-block.stuck { border-left: 4px solid #c47d0e; background: #fffdf6; }
+  .issue-block.stuck h3 { color: #8a5a00; }
+  .issue-block.up { border-left: 4px solid var(--bad); background: #fff8f7; }
+  .issue-block.up h3 { color: var(--bad); }
+  .issue-block.down { border-left: 4px solid var(--good); background: #f3faf6; }
+  .issue-block.down h3 { color: var(--good); }
+  .issue-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .issue-links li {
+    font-size: 0.88rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+    padding: 6px 0; border-bottom: 1px dashed var(--line);
+  }
+  .issue-links li:last-child { border-bottom: none; }
+  .issue-links li.empty { color: var(--muted); font-style: italic; border: none; }
+  .issue-links a {
+    color: var(--accent); text-decoration: underline; text-underline-offset: 2px;
+    font-weight: 600; cursor: pointer;
+  }
+  .issue-links a:hover { color: #0b3d66; text-decoration-thickness: 2px; }
+  .issue-links a .open-hint {
+    font-size: 0.75rem; font-weight: 700; margin-left: 4px; white-space: nowrap;
+    text-decoration: none; opacity: 0.75;
+  }
+  .issue-links li.linked-row { cursor: pointer; }
+  .issue-links li.linked-row:hover { background: var(--accent-soft); border-radius: 6px; }
+  .board-tag {
+    flex-shrink: 0; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; color: var(--muted); background: var(--flat-bg);
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .prop { color: var(--muted); font-size: 0.8rem; }
+  .cap-note { font-size: 0.8rem; color: var(--muted); margin: 8px 0 0; }
+  .account-block { border-color: #e0c080; }
+  .issue-footer {
+    margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 0.86rem; display: grid; gap: 4px;
+  }
+  .issue-footer code { font-size: 0.8rem; background: var(--flat-bg); padding: 1px 5px; border-radius: 4px; }
+
+  .breakdown li .bd-right { display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+  .breakdown li .bd-count { font-weight: 700; min-width: 1.5ch; text-align: right; }
+  .breakdown li .bd-arrow {
+    font-size: 0.78rem; font-weight: 800; min-width: 1.1rem; text-align: center;
+    line-height: 1;
+  }
+  .breakdown li .bd-arrow.good { color: var(--good); }
+  .breakdown li .bd-arrow.bad { color: var(--bad); }
+  .breakdown li .bd-arrow.flat { color: var(--flat); }
+  .completions-section {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px; margin: 0 0 18px;
+  }
+  .completions-section h2.section { margin-top: 0; border-bottom: none; padding-bottom: 0; }
+  .completions-lead { color: var(--muted); font-size: 0.88rem; margin: 4px 0 14px; }
+  .completions-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  @media (max-width: 900px) { .completions-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .completions-grid { grid-template-columns: 1fr; } }
+  .comp-card {
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    border-left: 4px solid #9aa8b8; background: var(--card);
+  }
+  .comp-card.good { border-left-color: var(--good); background: linear-gradient(90deg, var(--good-bg) 0%, var(--card) 40%); }
+  .comp-card.bad { border-left-color: var(--bad); background: linear-gradient(90deg, var(--bad-bg) 0%, var(--card) 40%); }
+  .comp-card.flat { border-left-color: #9aa8b8; }
+  .comp-card.total { grid-column: 1 / -1; }
+  .comp-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .comp-name { font-weight: 700; font-size: 0.95rem; }
+  .comp-value { font-size: 1.55rem; font-weight: 800; color: var(--accent); margin-top: 4px; }
+  .comp-card.good .comp-value { color: var(--good); }
+  .comp-card.bad .comp-value { color: var(--bad); }
+  .comp-label {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+    margin-top: 2px;
+  }
+  .comp-label.good { color: var(--good); }
+  .comp-label.bad { color: var(--bad); }
+  .comp-label.flat { color: var(--flat); }
+  .comp-note { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+
+  .va7 { margin: 22px 0 8px; }
+  .va7-lead { color: var(--muted); font-size: 0.9rem; margin: 0 0 10px; }
+  .va7-table { width: 100%; border-collapse: separate; border-spacing: 4px; font-size: 0.88rem; }
+  .va7-table th { text-align: center; color: var(--muted); font-weight: 600; padding: 6px 4px; }
+  .va7-table th.va { text-align: left; }
+  .va7-table td { text-align: center; border-radius: 8px; padding: 8px 4px; vertical-align: middle; }
+  .va7-table td.va { text-align: left; background: var(--card); border: 1px solid var(--line); }
+  .va7-table td.va small, .va7-table td small { display: block; color: var(--muted); font-size: 0.74rem; font-weight: 400; }
+  .va7-cell.updated { background: var(--good-bg); color: var(--good); font-weight: 700; border: 1px solid #b7e1c8; }
+  .va7-cell.missed { background: #d92d20; color: #fff; font-weight: 700; border: 1px solid #b42318; }
+  .va7-cell.missed small { color: #ffe4e1 !important; }
+  .va7-cell.off { background: var(--flat-bg); color: var(--flat); border: 1px dashed #c3ccd6; }
+  .va7-sum { font-weight: 700; }
+  .va7-sum.good { color: var(--good); } .va7-sum.bad { color: var(--bad); }
+  .va7-foot { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+  .va7-foot ul { margin: 4px 0 0 18px; padding: 0; }
+
+
+
+
+
+
+
+
+
+
+
+  /* link-fix-2026-10-10 */
+  .issue-links li.linked-row { position: relative; }
+  .issue-links li.linked-row a.item-link { position: static; }
+  .issue-links li.linked-row a.item-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+  .issue-links li.linked-row .prop, .issue-links li.linked-row .board-tag { position: relative; z-index: 0; pointer-events: none; }
+  /* /link-fix-2026-10-10 */
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <div class="badge">Bijou Getaways · Ops</div>
+        <h1>Weekly Team Progress</h1>
+        <p class="sub">Health snapshot for screen-share · Week of Nov 12, 2026 · Thursday weekly run</p>
+      </div>
+      <div class="sub">As of <strong>Thu Nov 12, 2026 08:55 PM PT</strong></div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Weekly Team Progress sections">
+      <button type="button" class="tab-btn active" role="tab" aria-selected="true" data-tab="overview" id="tab-overview">Overview</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="issues" id="tab-issues">Issue links</button>
+    </nav>
+
+    <div id="panel-overview" class="tab-panel">
+    <h2 class="section">Account health (9 metrics)</h2>
+    <div class="legend">
+      <span><i class="swatch good"></i> Green = improving</span>
+      <span><i class="swatch bad"></i> Red = worsening</span>
+      <span><i class="swatch flat"></i> Gray = flat / baseline</span>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi dir-bad">
+        <div class="kpi-top">
+          <div class="kpi-label">Total Active Issues</div>
+          <span class="dir-pill bad">▲ Up</span>
+        </div>
+        <div class="kpi-value">374</div>
+        <div class="kpi-note">Across mapped + unmapped · vs Nov 5 (253)</div>
+      </div>
+      <div class="kpi dir-bad">
+        <div class="kpi-top">
+          <div class="kpi-label">Completed Last 7 Days</div>
+          <span class="dir-pill bad">▼ Down</span>
+        </div>
+        <div class="kpi-value">218</div>
+        <div class="kpi-note">Maint / Res / Clean / Bad Reviews · vs Nov 5 (290)</div>
+      </div>
+      <div class="kpi dir-bad">
+        <div class="kpi-top">
+          <div class="kpi-label">Hottest Region Active</div>
+          <span class="dir-pill bad">▲ Up</span>
+        </div>
+        <div class="kpi-value">164</div>
+        <div class="kpi-note">Hawaii · vs Nov 5 hottest 121 (Hawaii)</div>
+      </div>
+      <div class="kpi dir-good">
+        <div class="kpi-top">
+          <div class="kpi-label">Bad Reviews Active</div>
+          <span class="dir-pill good">▼ Down</span>
+        </div>
+        <div class="kpi-value">9</div>
+        <div class="kpi-note">vs Nov 5 (12) · board flow -9</div>
+      </div>
+      <div class="kpi dir-bad">
+        <div class="kpi-top">
+          <div class="kpi-label">Maintenance Active</div>
+          <span class="dir-pill bad">▲ Up</span>
+        </div>
+        <div class="kpi-value">215</div>
+        <div class="kpi-note">vs Nov 5 (128) · board flow +57</div>
+      </div>
+      <div class="kpi dir-good">
+        <div class="kpi-top">
+          <div class="kpi-label">Unmapped Actives (DQ)</div>
+          <span class="dir-pill good">▼ Down</span>
+        </div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-note">Property text could not map · vs Nov 5 (8)</div>
+      </div>
+      <div class="kpi dir-bad">
+        <div class="kpi-top">
+          <div class="kpi-label">Net Backlog 7d</div>
+          <span class="dir-pill bad">▲ Up</span>
+        </div>
+        <div class="kpi-value">+89</div>
+        <div class="kpi-note">Growing · vs Nov 5 (-138)</div>
+      </div>
+      <div class="kpi dir-flat">
+        <div class="kpi-top">
+          <div class="kpi-label">Stuck / Escalated</div>
+          <span class="dir-pill flat">● Flat</span>
+        </div>
+        <div class="kpi-value">9</div>
+        <div class="kpi-note">Listings 7 + Cristina 2 · vs Nov 5 (9)</div>
+      </div>
+      <div class="kpi dir-bad">
+        <div class="kpi-top">
+          <div class="kpi-label">Cleaning Active</div>
+          <span class="dir-pill bad">▲ Up</span>
+        </div>
+        <div class="kpi-value">71</div>
+        <div class="kpi-note">vs Nov 5 (38) · board flow +39</div>
+      </div>
+    </div>
+
+    <div class="completions-section" id="completions-7d">
+      <h2 class="section" style="margin-bottom:0;">Completions (last 7 days)</h2>
+      <p class="completions-lead">Higher completions = better. Direction vs the 2026-10-30 CSV row (the prior run row). Unmapped has no prior column, so it uses completed vs created. Each card matches its region’s Completed 7d arrow.</p>
+      <div class="completions-grid">
+        <div class="comp-card bad total"><div class="comp-top"><span class="comp-name">Total (all regions + Unmapped)</span><span class="dir-pill bad">▼ Decreasing</span></div><div class="comp-value">218</div><div class="comp-label bad">▼ Decreasing</div><div class="comp-note">vs Nov 5 (290) · Maint/Res/Clean/Bad Reviews</div></div><div class="comp-card good"><div class="comp-top"><span class="comp-name">Hawaii</span><span class="dir-pill good">▲ Increasing</span></div><div class="comp-value">95</div><div class="comp-label good">▲ Increasing</div><div class="comp-note">vs Nov 5 (66) · created 133</div></div><div class="comp-card good"><div class="comp-top"><span class="comp-name">Napa</span><span class="dir-pill good">▲ Increasing</span></div><div class="comp-value">54</div><div class="comp-label good">▲ Increasing</div><div class="comp-note">vs Nov 5 (48) · created 50</div></div><div class="comp-card bad"><div class="comp-top"><span class="comp-name">USVI</span><span class="dir-pill bad">▼ Decreasing</span></div><div class="comp-value">57</div><div class="comp-label bad">▼ Decreasing</div><div class="comp-note">vs Nov 5 (90) · created 100</div></div><div class="comp-card bad"><div class="comp-top"><span class="comp-name">France</span><span class="dir-pill bad">▼ Decreasing</span></div><div class="comp-value">8</div><div class="comp-label bad">▼ Decreasing</div><div class="comp-note">vs Nov 5 (29) · created 20</div></div><div class="comp-card bad"><div class="comp-top"><span class="comp-name">Miami</span><span class="dir-pill bad">▼ Decreasing</span></div><div class="comp-value">3</div><div class="comp-label bad">▼ Decreasing</div><div class="comp-note">vs Nov 5 (6) · created 3</div></div><div class="comp-card flat"><div class="comp-top"><span class="comp-name">Unmapped</span><span class="dir-pill flat">● Flat</span></div><div class="comp-value">1</div><div class="comp-label flat">● Flat</div><div class="comp-note">Unmapped · completed vs created proxy (no prior CSV column)</div></div>
+      </div>
+    </div>
+
+    <!-- VA-7DAYS:START -->
+    <section class="va7" id="va-updates-7days">
+      <h2 class="section">VA daily updates — 7 Days board</h2>
+      <p class="va7-lead">Did each VA write at least one update for a <a href="https://bijougetaways.monday.com/boards/18428351041" target="_blank" rel="noopener">7 Days</a> issue they own each working day? Fri Nov 6 – Thu Nov 12 (PT days). <strong>Counts as updated:</strong> a new update or reply on the 7 Days item <em>or on the issue it links to in its “MDC Link” column</em> (Maintenance, Cleaning, Reservation, Claims …, where the VAs post their daily Who/What/When), an edit of an existing update, or an edit of an update/notes text column. <strong>Does not count:</strong> changing only a date or status (e.g. bumping “Last update”), or an update copied word-for-word from the previous one. Rewritten updates count even when there is little news. <strong style="color:var(--good)">✓ green</strong> = updated (number of own 7 Days issues updated; hover for details) · <strong style="color:#d92d20">red</strong> = missed working day · gray = Off.</p>
+      <table class="va7-table">
+        <thead><tr><th class="va">VA</th><th>Fri Nov 6</th><th>Sat Nov 7</th><th>Sun Nov 8</th><th>Mon Nov 9</th><th>Tue Nov 10</th><th>Wed Nov 11</th><th>Thu Nov 12</th><th class="va">Summary</th></tr></thead>
+        <tbody><tr><td class="va"><strong>Luna</strong><small>USVI · 5 d/wk</small></td><td class="va7-cell updated" title="Fri Nov 6 10:22 AM PT · update on linked Cleaning Issues item · [P2] Accelerate Oksana Replacement (Perez + other cleaners); Fri Nov 6 12:59 PM PT · update on linked Maintenance Issues item · [P1] Guest problems unresolved &gt;48 hrs (current 13); Fri Nov 6 3:29 PM PT · update on linked Maintenance Issues item · [P0] Life-Safety issues hazards to 0; Fri Nov 6 3:36 PM PT · update on linked Maintenance Issues item · [P2] Take photo of unit 3 of new plywood and paint; Fri Nov 6 5:38 PM PT · update on linked Maintenance Issues item · Find 5 new handymen in USVI - Recruit additional handyman via St Thomas Facebook groups; Fri Nov 6 5:39 PM PT · update on linked Maintenance Issues item · [P2] Unit #2 photos with replacement plywood on 10/25; Fri Nov 6 9:32 AM PT · update on linked Maintenance Issues item · [P1] Get plywood for unit 7 + pins for Hurricane (URGENT)">✓ 7<small>items updated</small></td><td class="va7-cell updated" title="Sat Nov 7 10:42 AM PT · update on linked Maintenance Issues item · [P1] Get plywood for unit 7 + pins for Hurricane (URGENT); Sat Nov 7 10:57 AM PT · update on linked Maintenance Issues item · [P2] Unit #2 photos with replacement plywood on 10/25; Sat Nov 7 10:58 AM PT · update on linked Maintenance Issues item · [P0] Life-Safety issues hazards to 0; Sat Nov 7 10:59 AM PT · update on linked Maintenance Issues item · [P2] Take photo of unit 3 of new plywood and paint; Sat Nov 7 11:21 AM PT · update on linked Cleaning Issues item · [P2] Accelerate Oksana Replacement (Perez + other cleaners)">✓ 5<small>items updated</small></td><td class="va7-cell off">Off<small>no #va-login-logout login</small></td><td class="va7-cell off">Off<small>no #va-login-logout login</small></td><td class="va7-cell updated" title="Tue Nov 10 3:43 PM PT · update on linked Maintenance Issues item · [P1] Get plywood for unit 7 + pins for Hurricane (URGENT); Tue Nov 10 5:56 PM PT · update on linked Maintenance Issues item · [P2] Unit #2 photos with replacement plywood on 10/25; Tue Nov 10 6:36 PM PT · update on linked Maintenance Issues item · [P0] Life-Safety issues hazards to 0; Tue Nov 10 6:40 PM PT · update on linked Maintenance Issues item · [P2] Take photo of unit 3 of new plywood and paint; Tue Nov 10 6:44 PM PT · update on 7 Days item · [P2] Accelerate Oksana Replacement (Perez + other cleaners); Tue Nov 10 7:48 PM PT · update on linked Maintenance Issues item · Find 5 new handymen in USVI - Recruit additional handyman via St Thomas Facebook groups">✓ 6<small>items updated</small></td><td class="va7-cell updated" title="Wed Nov 11 10:00 AM PT · update on linked Maintenance Issues item · [P1] Get plywood for unit 7 + pins for Hurricane (URGENT); Wed Nov 11 11:47 AM PT · update on linked Maintenance Issues item · [P2] Unit #2 photos with replacement plywood on 10/25; Wed Nov 11 11:50 AM PT · update on linked Maintenance Issues item · [P0] Life-Safety issues hazards to 0; Wed Nov 11 4:38 PM PT · update on linked Maintenance Issues item · [P2] Take photo of unit 3 of new plywood and paint; Wed Nov 11 4:47 PM PT · update on linked Maintenance Issues item · Find 5 new handymen in USVI - Recruit additional handyman via St Thomas Facebook groups">✓ 5<small>items updated</small></td><td class="va7-cell updated" title="Thu Nov 12 12:05 PM PT · update on linked Maintenance Issues item · [P0] Life-Safety issues hazards to 0; Thu Nov 12 5:29 PM PT · update on linked Maintenance Issues item · [P2] Unit #2 photos with replacement plywood on 10/25; Thu Nov 12 5:29 PM PT · update on linked Maintenance Issues item · Find 5 new handymen in USVI - Recruit additional handyman via St Thomas Facebook groups">✓ 3<small>items updated</small></td><td class="va"><span class="va7-sum good">5/5 days</span><small>0 missed · 26 written updates</small></td></tr><tr><td class="va"><strong>Luis</strong><small>Napa + Hawaii · 5 d/wk</small></td><td class="va7-cell off">Off<small>before start (n/a)</small></td><td class="va7-cell off">Off<small>before start (n/a)</small></td><td class="va7-cell off">Off<small>before start (n/a)</small></td><td class="va7-cell off">Off<small>before start (n/a)</small></td><td class="va7-cell off">Off<small>no #va-login-logout login</small></td><td class="va7-cell missed">✗ Missed<small>no written update on own 7 Days items</small></td><td class="va7-cell updated" title="Thu Nov 12 1:45 AM PT · update on linked Reservation Issues item · [P1] Bad review close plan &lt;&lt;10">✓ 1<small>item updated</small></td><td class="va"><span class="va7-sum bad">1/2 days</span><small>1 missed · 1 written updates</small></td></tr><tr><td class="va"><strong>Baptiste</strong><small>France + Miami · 7 d/wk</small></td><td class="va7-cell updated" title="Fri Nov 6 3:42 AM PT · update on linked Maintenance Issues item · [P2] Install 2 TVs on wall in Miami + provide MDC; Fri Nov 6 3:43 AM PT · update on linked Maintenance Issues item · [P2] Carpet Miami Cleaning">✓ 2<small>items updated</small></td><td class="va7-cell updated" title="Sat Nov 7 3:33 AM PT · update on linked Maintenance Issues item · [P2] Install 2 TVs on wall in Miami + provide MDC; Sat Nov 7 3:34 AM PT · update on linked Maintenance Issues item · [P2] Carpet Miami Cleaning">✓ 2<small>items updated</small></td><td class="va7-cell updated" title="Sun Nov 8 2:40 AM PT · update on linked Maintenance Issues item · [P2] Install 2 TVs on wall in Miami + provide MDC; Sun Nov 8 2:41 AM PT · update on 7 Days item · [P2] Carpet Miami Cleaning; Sun Nov 8 2:42 AM PT · update on linked Maintenance Issues item · [P2] Carpet Miami Cleaning">✓ 2<small>items updated</small></td><td class="va7-cell updated" title="Mon Nov 9 3:18 AM PT · update on linked Maintenance Issues item · [P2] Install 2 TVs on wall in Miami + provide MDC; Mon Nov 9 3:19 AM PT · update on linked Maintenance Issues item · [P2] Carpet Miami Cleaning">✓ 2<small>items updated</small></td><td class="va7-cell missed">✗ Missed<small>no written update on own 7 Days items</small></td><td class="va7-cell updated" title="Wed Nov 11 5:39 AM PT · update on linked Maintenance Issues item · [P2] Install 2 TVs on wall in Miami + provide MDC; Wed Nov 11 5:40 AM PT · update on linked Maintenance Issues item · [P2] Carpet Miami Cleaning">✓ 2<small>items updated</small></td><td class="va7-cell updated" title="Thu Nov 12 6:58 AM PT · update on 7 Days item · [P2] Install 2 TVs on wall in Miami + provide MDC; Thu Nov 12 6:58 AM PT · update on linked Maintenance Issues item · [P2] Install 2 TVs on wall in Miami + provide MDC; Thu Nov 12 6:58 AM PT · update on 7 Days item · [P2] Carpet Miami Cleaning">✓ 2<small>items updated</small></td><td class="va"><span class="va7-sum bad">6/7 days</span><small>1 missed · 14 written updates</small></td></tr></tbody>
+      </table>
+      <div class="va7-foot">Off days: Luna and Luis from Slack #va-login-logout (no login that day = Off); Baptiste works 7 days/week, so no off days. Luis (Napa + Hawaii) started Tue Nov 10 (provisional 5 d/wk), so earlier days are gray (not applicable), never red. Counting rule fixed 2026-10-17: the first version only read updates posted on the 7 Days item itself, so it missed the updates the VAs post on the linked issue. Computed Thu Nov 12, 2026 8:57 PM PT.</div>
+      <div class="va7-foot"><strong>Owned In-Progress 7 Days issues with no written update in the window (on the 7 Days item or its linked issue):</strong><ul><li><strong>Luna</strong> (2 of 6 In-Progress owned): <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13495316018" target="_blank" rel="noopener">Off track: Cleaning QC inspections failed (week)</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13496972998" target="_blank" rel="noopener">Update all unit audits with accurate and schedule them</a></li><li><strong>Luis</strong> (7 of 8 In-Progress owned): <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/12916628165" target="_blank" rel="noopener">[P2] Find 5+ NEW handymen in HI that are ~$50/hr</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13319053779" target="_blank" rel="noopener">[P2] Fix all smart plugs in HI: 3303, G110A,</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13372959292" target="_blank" rel="noopener">[P2] Find new cleaners in Napa to replace Movement</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13434312738" target="_blank" rel="noopener">[P1] Hawaii open P0/P1 + flagged pile not clearing</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13496965149" target="_blank" rel="noopener">Sofa bed form Ikea in 662</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13496981494" target="_blank" rel="noopener">Oksana + Rick Albany Invoices Missing</a>, <a href="https://bijougetaways.monday.com/boards/18428351041/pulses/13496981767" target="_blank" rel="noopener">Replace board 662 in closet that has mold</a></li></ul></div>
+    </section>
+<!-- VA-7DAYS:END -->
+
+    <h2 class="section">Region by region</h2>
+    <div class="regions">
+    <article class="region-card">
+      <header>
+        <div>
+          <div class="region-title-row">
+            <h2>Hawaii</h2>
+            <span class="dir-pill bad">▲ Up</span>
+          </div>
+          <p class="owner">Owner: Luis Francisco Medina · overall worse (Net 7d +38)</p>
+        </div>
+        <div class="region-stats">
+          <div>
+            <span class="label">Active</span>
+            <span class="num bad">164</span>
+            <span class="stat-dir bad" title="vs Nov 5 (121)">▲ Up</span>
+          </div>
+          <div>
+            <span class="label">Completed 7d</span>
+            <span class="num good">95</span>
+            <span class="stat-dir good" title="vs Nov 5 (66)">▲ Up</span>
+          </div>
+          <div>
+            <span class="label">Net 7d</span>
+            <span class="num bad">+38</span>
+            <span class="stat-dir bad">▲ Up</span>
+          </div>
+        </div>
+      </header>
+      <ul class="breakdown"><li><span>Maintenance</span><span class="bd-right" title="net +19 (created 83 − completed 64)"><span class="bd-count">92</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Reservations</span><span class="bd-right" title="net +3 (created 12 − completed 9)"><span class="bd-count">3</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Cleaning</span><span class="bd-right" title="net +22 (created 38 − completed 16)"><span class="bd-count">40</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Bad Reviews</span><span class="bd-right" title="net -6 (created 0 − completed 6)"><span class="bd-count">4</span><span class="bd-arrow good" aria-label="down">▼</span></span></li><li><span>Review Removal</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">6</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Claims</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">13</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>AI / Automation</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">2</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Listings</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">4</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li></ul>
+    </article>
+    <article class="region-card">
+      <header>
+        <div>
+          <div class="region-title-row">
+            <h2>Napa</h2>
+            <span class="dir-pill good">▼ Down</span>
+          </div>
+          <p class="owner">Owner: Luis Francisco Medina · overall better (Net 7d -4)</p>
+        </div>
+        <div class="region-stats">
+          <div>
+            <span class="label">Active</span>
+            <span class="num bad">105</span>
+            <span class="stat-dir bad" title="vs Nov 5 (77)">▲ Up</span>
+          </div>
+          <div>
+            <span class="label">Completed 7d</span>
+            <span class="num good">54</span>
+            <span class="stat-dir good" title="vs Nov 5 (48)">▲ Up</span>
+          </div>
+          <div>
+            <span class="label">Net 7d</span>
+            <span class="num good">-4</span>
+            <span class="stat-dir good">▼ Down</span>
+          </div>
+        </div>
+      </header>
+      <ul class="breakdown"><li><span>Maintenance</span><span class="bd-right" title="net -5 (created 23 − completed 28)"><span class="bd-count">45</span><span class="bd-arrow good" aria-label="down">▼</span></span></li><li><span>Reservations</span><span class="bd-right" title="net -1 (created 10 − completed 11)"><span class="bd-count">3</span><span class="bd-arrow good" aria-label="down">▼</span></span></li><li><span>Cleaning</span><span class="bd-right" title="net +5 (created 13 − completed 8)"><span class="bd-count">19</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Bad Reviews</span><span class="bd-right" title="net -3 (created 4 − completed 7)"><span class="bd-count">5</span><span class="bd-arrow good" aria-label="down">▼</span></span></li><li><span>Review Removal</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">4</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Claims</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">13</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>AI / Automation</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">1</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Listings</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">15</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li></ul>
+    </article>
+    <article class="region-card">
+      <header>
+        <div>
+          <div class="region-title-row">
+            <h2>USVI</h2>
+            <span class="dir-pill bad">▲ Up</span>
+          </div>
+          <p class="owner">Owner: Luna Proietti · overall worse (Net 7d +43)</p>
+        </div>
+        <div class="region-stats">
+          <div>
+            <span class="label">Active</span>
+            <span class="num bad">82</span>
+            <span class="stat-dir bad" title="vs Nov 5 (39)">▲ Up</span>
+          </div>
+          <div>
+            <span class="label">Completed 7d</span>
+            <span class="num bad">57</span>
+            <span class="stat-dir bad" title="vs Nov 5 (90)">▼ Down</span>
+          </div>
+          <div>
+            <span class="label">Net 7d</span>
+            <span class="num bad">+43</span>
+            <span class="stat-dir bad">▲ Up</span>
+          </div>
+        </div>
+      </header>
+      <ul class="breakdown"><li><span>Maintenance</span><span class="bd-right" title="net +34 (created 80 − completed 46)"><span class="bd-count">64</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Cleaning</span><span class="bd-right" title="net +9 (created 12 − completed 3)"><span class="bd-count">9</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Review Removal</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">1</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Claims</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">4</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Listings</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">3</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Glitch</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">1</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li></ul>
+    </article>
+    <article class="region-card">
+      <header>
+        <div>
+          <div class="region-title-row">
+            <h2>France</h2>
+            <span class="dir-pill bad">▲ Up</span>
+          </div>
+          <p class="owner">Owner: Baptiste Sarrat · overall worse (Net 7d +12)</p>
+        </div>
+        <div class="region-stats">
+          <div>
+            <span class="label">Active</span>
+            <span class="num bad">15</span>
+            <span class="stat-dir bad" title="vs Nov 5 (5)">▲ Up</span>
+          </div>
+          <div>
+            <span class="label">Completed 7d</span>
+            <span class="num bad">8</span>
+            <span class="stat-dir bad" title="vs Nov 5 (29)">▼ Down</span>
+          </div>
+          <div>
+            <span class="label">Net 7d</span>
+            <span class="num bad">+12</span>
+            <span class="stat-dir bad">▲ Up</span>
+          </div>
+        </div>
+      </header>
+      <ul class="breakdown"><li><span>Maintenance</span><span class="bd-right" title="net +9 (created 11 − completed 2)"><span class="bd-count">9</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Cleaning</span><span class="bd-right" title="net +3 (created 3 − completed 0)"><span class="bd-count">3</span><span class="bd-arrow bad" aria-label="up">▲</span></span></li><li><span>Review Removal</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">2</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li><li><span>Listings</span><span class="bd-right" title="no 7d flow yet"><span class="bd-count">1</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li></ul>
+    </article>
+    <article class="region-card">
+      <header>
+        <div>
+          <div class="region-title-row">
+            <h2>Miami</h2>
+            <span class="dir-pill flat">● Flat</span>
+          </div>
+          <p class="owner">Owner: Baptiste Sarrat · overall flat (Net 7d 0)</p>
+        </div>
+        <div class="region-stats">
+          <div>
+            <span class="label">Active</span>
+            <span class="num flat">3</span>
+            <span class="stat-dir flat" title="vs Nov 5 (3)">● Flat</span>
+          </div>
+          <div>
+            <span class="label">Completed 7d</span>
+            <span class="num bad">3</span>
+            <span class="stat-dir bad" title="vs Nov 5 (6)">▼ Down</span>
+          </div>
+          <div>
+            <span class="label">Net 7d</span>
+            <span class="num flat">0</span>
+            <span class="stat-dir flat">● Flat</span>
+          </div>
+        </div>
+      </header>
+      <ul class="breakdown"><li><span>Maintenance</span><span class="bd-right" title="net 0 (created 1 − completed 1)"><span class="bd-count">3</span><span class="bd-arrow flat" aria-label="flat">●</span></span></li></ul>
+    </article>
+    </div>
+
+    <div class="note-box">
+      <strong>Direction source (Nov 12 weekly slot, Thursday night run):</strong> Compared with the prior row in <code>monday-ops-health.csv</code>, <strong>2026-11-05</strong> (last Thursday run), so directions are vs that snapshot (7 calendar days). No other prior row is assumed.
+      Region trend pills and category arrows use region × board Net Backlog 7d (created − completed). Region Active and Completed 7d use the 11-05 row.
+      <strong>Completions method:</strong> Completed 7d reads the completion-date column for Reservation, Cleaning and Bad Reviews (completion date on or after the 7-day cutoff day). Maintenance has no completion-date column, so it counts Completed/Done items whose last update falls in the 7 days. Same method as the prior Thursday runs, so the 290 → 218 change is like-for-like. The 7-day window runs from the live pull time (cutoff Thu Nov 5 PT). By board vs Nov 5: Bad Reviews 16 (vs 39), Cleaning 27 (vs 46), Maintenance 142 (vs 187), Reservations 33 (vs 18); all follow the completion-date column as entered on the board. Hawaii and Napa owner is Luis Francisco Medina since 2026-11-10; USVI stays Luna Proietti; France and Miami stay Baptiste Sarrat.
+      Private flagged-issue metrics stay off this team view; the VA daily-update table (7 Days board) was added at Erwan’s request on 2026-10-08. Dashboard: <a href="https://bijougetaways.monday.com/dashboards/39665947" target="_blank" rel="noopener">Weekly Team Progress</a>.
+    </div>
+    </div>
+
+    <div id="panel-issues" class="tab-panel" hidden>
+      <h2 class="section">Issue links by region</h2>
+      <p class="issue-intro">Monday pulse links for Stuck/Escalated (Listings + Cristina), Up origins (active Bad Reviews + Cleaning), and Down origins (Maintenance completed ~7d). Cap 25 per category per region.</p>
+      <div class="issue-summary">
+        <div class="pill stuck-pill"><span>Stuck</span><strong>9</strong><span>Listings 7 + Cristina 2</span></div>
+        <div class="pill up-pill"><span>Up origins</span><strong>80</strong><span>Bad Reviews 9 + Cleaning 71</span></div>
+        <div class="pill down-pill"><span>Down origins</span><strong>142</strong><span>Maintenance completed 7d</span></div>
+      </div>
+      <div class="regions">
+
+      <article class="region-card">
+        <header><div><h2>Hawaii</h2><p class="owner">Owner: Luis Francisco Medina</p></div></header>
+        <div class="issue-block stuck"><h3>Stuck / Escalated <span class="count">(1)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/12459717045" target="_blank" rel="noopener">Listing accuracy: Kamaole sands units shown water bed mattress<span class="open-hint">↗</span></a><span class="prop">Hawaii - 9306, Hawaii - 4112</span></li></ul></div>
+        <div class="issue-block up"><h3>Up origins (Bad Reviews + Cleaning active) <span class="count">(29)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13296214152" target="_blank" rel="noopener">[P2] Regina — Amenities: No real wine glasses (plastic only)<span class="open-hint">↗</span></a><span class="prop">Hawaii - P109</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/12032375144" target="_blank" rel="noopener">[P3] bill reported the unit looks worn and tired, noting it needs a new coat of paint, clean curtains, new decor, and minor cosmetic repairs.<span class="open-hint">↗</span></a><span class="prop">Hawaii - P109</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13343063269" target="_blank" rel="noopener">[P1] Christoph — Maintenance: Very loud AC units<span class="open-hint">↗</span></a><span class="prop">Hawaii - 9306</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/12248702543" target="_blank" rel="noopener">[P3] Pawel reported that the entrance door is dingy.<span class="open-hint">↗</span></a><span class="prop">Hawaii - P109A</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13196406440" target="_blank" rel="noopener">[P2] Find a new cleaner - Oksana Replacement<span class="open-hint">↗</span></a><span class="prop">Hawaii</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13314143933" target="_blank" rel="noopener">[P3] [RapidEye] Dark scuff/pencil mark on wall right of sliding door<span class="open-hint">↗</span></a><span class="prop">Hawaii - G110</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13411404000" target="_blank" rel="noopener">[P2] [GB55] Hawaii P109A — broken wine glass found at checkout clean (cleaner photo)<span class="open-hint">↗</span></a><span class="prop">Hawaii - P109A</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13412869713" target="_blank" rel="noopener">[P3] [GB55] Hawaii 4112 — 3 of 4 beach towels missing after checkout (cleaner Oksana)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13423415224" target="_blank" rel="noopener">[RapidEye] Orange-brown spots and discoloration on white bed linen<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49A</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13423570808" target="_blank" rel="noopener">[P2] [GB55] Hawaii 49A — beach umbrella + snorkel masks missing; stained queen bedding replaced after checkout (cleaner Oksana)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49A</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13423678496" target="_blank" rel="noopener">[P2] [GB55] Hawaii Maui Banyan — queen sheet sets short (cleaner used own sheets); Pérez asks for 5+ backup sets + new matching beach towels<span class="open-hint">↗</span></a><span class="prop">Hawaii - Maui Banyan (all units)</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13484175249" target="_blank" rel="noopener">Purchase request from Oksana<span class="open-hint">↗</span></a><span class="prop">Hawaii - P304</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13489753131" target="_blank" rel="noopener">[RapidEye] Dried leaf debris on living room carpet by baseboard<span class="open-hint">↗</span></a><span class="prop">Hawaii - 9306</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13489840917" target="_blank" rel="noopener">[RapidEye] Glass cooktop hazy residue and burnt-on marks<span class="open-hint">↗</span></a><span class="prop">Hawaii - 9306</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13489756521" target="_blank" rel="noopener">[RapidEye] Unplugged smart plug adapter left on living room carpet<span class="open-hint">↗</span></a><span class="prop">Hawaii - 9306</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13494608077" target="_blank" rel="noopener">[P3] [GB55] Hawaii (unit TBD — Oksana) — replace stained/old hair dryer<span class="open-hint">↗</span></a><span class="prop">Hawaii (unit TBD — Oksana)</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13497225257" target="_blank" rel="noopener">[RapidEye] Cloudy white residue on outdoor patio dining table glass<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13497225137" target="_blank" rel="noopener">[RapidEye] Unplugged charging cord left under entry console table<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49A</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13497113345" target="_blank" rel="noopener">[RapidEye] Sandals and yellow cloth left near front entry door<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13499707555" target="_blank" rel="noopener">[P3] [RapidEye] Stained bottom hem of living room curtain (left of AC)<span class="open-hint">↗</span></a><span class="prop">Hawaii - P109</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13500103372" target="_blank" rel="noopener">[P2] [RapidEye] Mildew-like spots on bedroom right window curtain panel<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13500141203" target="_blank" rel="noopener">[P2] [RapidEye] Purple hair dryer missing from bathroom vanity<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510447474" target="_blank" rel="noopener">[P3] [RapidEye] Faint scuff on lower panel of white pantry cabinet door by fridge - clean/touch up<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510447477" target="_blank" rel="noopener">[P3] [RapidEye] Loose white threads &amp; lint on dark grey bedroom throw pillow - de-lint/trim<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510447478" target="_blank" rel="noopener">[P3] [RapidEye] Dark scuff marks on wall above round bedside table - clean/touch up<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510455122" target="_blank" rel="noopener">[P3] [RapidEye] Decorative topiary plant missing from right bedside table - replace<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510455126" target="_blank" rel="noopener">[P2] [RapidEye] Dark buildup in toilet bowl + brown stain on seat bumper - scrub &amp; clean<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510455128" target="_blank" rel="noopener">[P3] [RapidEye] Yellow stain &amp; smudges on liner of kitchen coffee-supply pull-out shelf - wipe clean<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13510447578" target="_blank" rel="noopener">[P3] [RapidEye] Burnt-on residue on front-left burner of glass cooktop - clean &amp; polish<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li></ul></div>
+        <div class="issue-block down"><h3>Down origins (Maintenance completed ~7d) <span class="count">(25)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13140722837" target="_blank" rel="noopener">[P2] Get Sofabed for 3303 (dark gray homeworld)<span class="open-hint">↗</span></a><span class="prop">Hawaii</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13143545824" target="_blank" rel="noopener">[P2] Missing pen for parking permit.<span class="open-hint">↗</span></a><span class="prop">Hawaii  - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13248618587" target="_blank" rel="noopener">[P1] [RapidEye] Tear and fraying in curtain fabric with brown liquid drip stains<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13248617036" target="_blank" rel="noopener">[P1] [RapidEye] Tear in fabric with frayed threads and brown liquid staining<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13510455121" target="_blank" rel="noopener">[P3] [RapidEye] Metal piece sticking out behind right closet door knob - repair/replace knob<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13363394002" target="_blank" rel="noopener">[P2] Offline: Kasa plug 3303 – Hawaii<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13510447582" target="_blank" rel="noopener">[P2] [RapidEye] Rust &amp; chipped paint at microwave opening and interior seams - repair or replace microwave<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13510447473" target="_blank" rel="noopener">[P3] [RapidEye] Paint test squares + blue painter&#x27;s tape on hallway wall outside bathroom - remove &amp; repaint<span class="open-hint">↗</span></a><span class="prop">Hawaii - 3303</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13455926259" target="_blank" rel="noopener">Ring offline: 4112 — 2026-11-03<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13498398855" target="_blank" rel="noopener">Offline: Ring 4112 – Kamaole<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13500141202" target="_blank" rel="noopener">[P3] [RapidEye] Bedside lampshade bent spoke / frayed rim<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13500137694" target="_blank" rel="noopener">[P3] [RapidEye] Dishwasher door top inner edge plastic damaged, covered with grey tape<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13500116866" target="_blank" rel="noopener">[P1] [RapidEye] Kitchen backsplash outlet left of toaster discolored / possible scorching - inspect &amp; replace<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13500062895" target="_blank" rel="noopener">[P1] [GB55] Hawaii 4112 — bedroom portable AC won&#x27;t turn on + fan/light remote needs batteries + loud toilet tank (cleaner Oksana)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 4112</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13256999991" target="_blank" rel="noopener">Kasa offline: 49 — 2026-10-10<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13458505591" target="_blank" rel="noopener">Kasa offline: 49 — 2026-11-03<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13232984791" target="_blank" rel="noopener">[P2] [RapidEye] Orange/brown stains on balcony tiles near wall/planters<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13338056149" target="_blank" rel="noopener">[P2] [GB55] Hawaii 49 — bathroom light bulb burned out, needs replacing (reported by cleaner)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13498580127" target="_blank" rel="noopener">[P1] [GB55] Hawaii 49 — rain shower head causes low water pressure; replace with smaller head (Rus)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13497098854" target="_blank" rel="noopener">[RapidEye] Patio sliding screen door handle loose and detached<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13422737073" target="_blank" rel="noopener">[P2] [GB55] Hawaii 49/49A — move lanai furniture back after HOA repaint (49 heavy glass-top table needs handyman; cleaner extra fee)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49/49A</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13389538030" target="_blank" rel="noopener">[P1] [GB71][HOA] GCV 49/49A (Bldg #5) — front doors open + louvers ~1&quot; all day, close at 5pm — due 2026-10-29<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49/49A</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13423308748" target="_blank" rel="noopener">[RapidEye] Water leaking and pooling around toilet base (pre-existing since Oct 23)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49A</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13423313901" target="_blank" rel="noopener">[RapidEye] Standing water pooling on hallway tile near exterior entrance<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49A</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13423312143" target="_blank" rel="noopener">[RapidEye] Bed sheet with large purple stain and burn marks/punctures (replace)<span class="open-hint">↗</span></a><span class="prop">Hawaii - 49A</span></li></ul></div>
+      </article>
+
+      <article class="region-card">
+        <header><div><h2>Napa</h2><p class="owner">Owner: Luis Francisco Medina</p></div></header>
+        <div class="issue-block stuck"><h3>Stuck / Escalated <span class="count">(3)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/11455515358" target="_blank" rel="noopener">Check listing changes for shared units in Napa (648/649)<span class="open-hint">↗</span></a><span class="prop">Napa - 648, Napa - 649</span></li><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/11562291407" target="_blank" rel="noopener">Brita cancelled claiming the listing is described as a &quot;Condo&quot; but it is actually a &quot;Hotel Room<span class="open-hint">↗</span></a><span class="prop">Napa - 649</span></li><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/12211848223" target="_blank" rel="noopener">Listing Shows access to fitness centre<span class="open-hint">↗</span></a><span class="prop">Napa</span></li></ul></div>
+        <div class="issue-block up"><h3>Up origins (Bad Reviews + Cleaning active) <span class="count">(24)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13380918212" target="_blank" rel="noopener">[P2] David — Maintenance: Bathroom light fixture has mismatched covers and bulb colors<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13379932340" target="_blank" rel="noopener">[P2] Brady — Maintenance: Loose towel rack<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13499346752" target="_blank" rel="noopener">[P1] 🔁 REPEAT Helen Hening — Cleaning: Unit not very clean — dusty, hair/pet hair (Napa 667)<span class="open-hint">↗</span></a><span class="prop">Napa - 667</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13514067783" target="_blank" rel="noopener">[P3] 🔁 REPEAT Jessica Gardner — Communication: Unit hard to find in the dark (Napa - 491)<span class="open-hint">↗</span></a><span class="prop">Napa - 491</span></li><li class="linked-row"><span class="board-tag">Bad Review</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18402079325/pulses/13499346754" target="_blank" rel="noopener">[P2] Helen Hening — Neighborhood: No parking available — lots full, guest parked in carport (Napa 667)<span class="open-hint">↗</span></a><span class="prop">Napa - 667</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13320600311" target="_blank" rel="noopener">[P3] [RapidEye] Drip marks/grime on wall below light switch<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13320600313" target="_blank" rel="noopener">[P3] [RapidEye] White paint splatter/residue on wall tiles<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13375187232" target="_blank" rel="noopener">[P2] Find new cleaners in Napa to replace Movement<span class="open-hint">↗</span></a><span class="prop">Napa</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13377350401" target="_blank" rel="noopener">[P3] [RapidEye] Yellowish-brown stain on vanity cabinet base shelf<span class="open-hint">↗</span></a><span class="prop">Napa - 666</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13449691707" target="_blank" rel="noopener">[P2] [GB55] Napa 465 — bed condition found on arrival 11/1 (Diamond photo)<span class="open-hint">↗</span></a><span class="prop">Napa - 465</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13484805427" target="_blank" rel="noopener">[RapidEye] Indoor bath mat left outside on patio<span class="open-hint">↗</span></a><span class="prop">Napa - 465</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13499447826" target="_blank" rel="noopener">[P2] [RapidEye] Napa 669 – Heavy cloudy film/white residue on shower door glass<span class="open-hint">↗</span></a><span class="prop">Napa - 669</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13499717074" target="_blank" rel="noopener">[P2] [RapidEye] Yellow cleaning rags left on living room floor<span class="open-hint">↗</span></a><span class="prop">Napa - 648</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13509514017" target="_blank" rel="noopener">[P3] [RapidEye] Plastic bags piled on wicker stand outside entry door<span class="open-hint">↗</span></a><span class="prop">Napa - 491</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13509474160" target="_blank" rel="noopener">[P2] [RapidEye] Torn foil lids on creamer cups in coffee bar tray - discard &amp; restock<span class="open-hint">↗</span></a><span class="prop">Napa - 491</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13516582606" target="_blank" rel="noopener">Parking availability and cleanliness issues reported by guest<span class="open-hint">↗</span></a><span class="prop">Napa - 667</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521167297" target="_blank" rel="noopener">[P1] [GB55] Napa 465 — unit/hall smells like smoke after last guest (cleaner Diamond, photo+video)<span class="open-hint">↗</span></a><span class="prop">Napa - 465</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521714501" target="_blank" rel="noopener">[P2] [RapidEye] Yellow garden hose and black cord sprawled across the patio walkway - coil and store off the walkway<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521714505" target="_blank" rel="noopener">[P2] [RapidEye] Tied trash bags and loose rubbish piled on the walkway outside the front door - remove<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521714645" target="_blank" rel="noopener">[P2] [RapidEye] Folded white sheet set missing from the storage compartment inside the living room sectional chaise - restock<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521714646" target="_blank" rel="noopener">[P2] [RapidEye] Dark stain or smudge on the white bath mat draped over the bathtub - launder or replace<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521714647" target="_blank" rel="noopener">[P2] [RapidEye] Dark staining and grime on the folded white/blue-stripe towel on the upper shelf in the right bathroom vanity - launder or replace<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13521714372" target="_blank" rel="noopener">[P2] [RapidEye] Leftover food in a plastic container in the middle bin on the right refrigerator door - remove and clean the bin<span class="open-hint">↗</span></a><span class="prop">Napa - 465</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13540447217" target="_blank" rel="noopener">[P1] [RapidEye] Shower curtain is missing from the bathtub - install a replacement curtain on the rod<span class="open-hint">↗</span></a><span class="prop">Napa - 649</span></li></ul></div>
+        <div class="issue-block down"><h3>Down origins (Maintenance completed ~7d) <span class="count">(25)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13435224120" target="_blank" rel="noopener">(P2)Urgent Napa schedule for 11/1-11/4 for handyman and activities<span class="open-hint">↗</span></a><span class="prop">Napa</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13380972310" target="_blank" rel="noopener">[P1] [RapidEye] Under-sink cabinet door bottom hinge detached<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448618668" target="_blank" rel="noopener">[P1] Napa 489 – Ecobee thermostat detached from wall base / exposed wiring – remount/repair<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13381000785" target="_blank" rel="noopener">[P2] [RapidEye] Window latch loose/misaligned, rusted screws, chipped paint at keeper<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13381028418" target="_blank" rel="noopener">[P2] [RapidEye] Chipped paint exposing bare metal on black door frame near latch<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13380999488" target="_blank" rel="noopener">[P2] [RapidEye] Vertical crack in wall finish near window frame<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13453931958" target="_blank" rel="noopener">[P2] [GB55] Napa 489 – Slow/clogged bathroom drain (tub/shower) + musty moisture odor (check ventilation &amp; leaks)<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448519575" target="_blank" rel="noopener">[P2] Napa 489 – Patio wicker chair damaged (torn armrest, missing cushion) – repair/replace<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448556675" target="_blank" rel="noopener">[P2] Napa 489 – Remove old fireplace tool set from closet (no fires allowed)<span class="open-hint">↗</span></a><span class="prop">Napa - 489</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13431256844" target="_blank" rel="noopener">[P2] [GB55] Napa 648 — burned-out lamp bulb; Fernando checked fixture, no smoke/scorch traces, cause unclear (reported by handyman)<span class="open-hint">↗</span></a><span class="prop">Napa - 648</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13320600307" target="_blank" rel="noopener">[P2] [RapidEye] Detached veneer edge banding on upper closet shelf<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448673080" target="_blank" rel="noopener">[P2] Napa 662 – No kettle to boil water – buy and stock<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448663149" target="_blank" rel="noopener">[P2] Napa 662 – Throw pillow missing cover (insert only) – buy/replace cover<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448663212" target="_blank" rel="noopener">[P1] Napa 662 – Living sofa badly stained – replace with same model<span class="open-hint">↗</span></a><span class="prop">Napa - 662</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/10940538734" target="_blank" rel="noopener">[P3] Moran report (Not urgent) chair needs to be replaced<span class="open-hint">↗</span></a><span class="prop">Napa - 663</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13476133484" target="_blank" rel="noopener">[RapidEye] Nespresso machine missing from media console<span class="open-hint">↗</span></a><span class="prop">Napa - 663</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13496065789" target="_blank" rel="noopener">[P1] [GB55] Napa 663 — room will not lock from inside (guest report; Movement verify 11/7)<span class="open-hint">↗</span></a><span class="prop">Napa - 663</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13377354612" target="_blank" rel="noopener">[P1] [RapidEye] TV screen has horizontal line defect when powered on<span class="open-hint">↗</span></a><span class="prop">Napa - 666</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13445212151" target="_blank" rel="noopener">[P2] [GB55] Napa 666 — bath drain plug missing, guest asking for one (check-in 11/2)<span class="open-hint">↗</span></a><span class="prop">Napa - 666</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13376136177" target="_blank" rel="noopener">[P1] [RapidEye] Crack on seat of white accent chair (replace chair)<span class="open-hint">↗</span></a><span class="prop">Napa - 667</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13422430838" target="_blank" rel="noopener">[P0] Napa 669 — smoke detector not working (dead battery)<span class="open-hint">↗</span></a><span class="prop">Napa - 669</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13448807879" target="_blank" rel="noopener">[P3] Napa 669 – Bathroom wood soap dispenser water-stained/edge wear – replace<span class="open-hint">↗</span></a><span class="prop">Napa - 669</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13499394383" target="_blank" rel="noopener">[P1] [RapidEye] Napa 669 – Electrical outlet below bedroom TV missing cover plate<span class="open-hint">↗</span></a><span class="prop">Napa - 669</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13498398856" target="_blank" rel="noopener">Napa - Ecobee 667 offline<span class="open-hint">↗</span></a><span class="prop">Napa - Ecobee 667</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13471327092" target="_blank" rel="noopener">[P2] Offline: Ecobee &quot;My ecobee&quot; – Napa (unknown unit) (2026-11-04)<span class="open-hint">↗</span></a><span class="prop">Napa - Ecobee My ecobee</span></li></ul></div>
+      </article>
+
+      <article class="region-card">
+        <header><div><h2>USVI</h2><p class="owner">Owner: Luna Proietti</p></div></header>
+        <div class="issue-block stuck"><h3>Stuck / Escalated <span class="count">(2)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/11935566876" target="_blank" rel="noopener">USVI #6 — Listing uses &#x27;apartment&#x27; language but guests describe cheap cabin furnishings; type mismatch. Sonia loop required<span class="open-hint">↗</span></a><span class="prop">USVI - #6</span></li><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/11935566877" target="_blank" rel="noopener">⛔ LOCKED — USVI #3: Guests report misrepresented patio and hidden/poor surroundings. Manual review only. Sonia loop required<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li></ul></div>
+        <div class="issue-block up"><h3>Up origins (Bad Reviews + Cleaning active) <span class="count">(9)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13491049757" target="_blank" rel="noopener">[RapidEye] Paper towel roll crumpled<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13492332169" target="_blank" rel="noopener">[RapidEye] Kitchen window AC mold/dust<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13496409939" target="_blank" rel="noopener">[RapidEye] Pedestal fan heavy dust<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13496409944" target="_blank" rel="noopener">[RapidEye] Spider/cobweb under balcony table<span class="open-hint">↗</span></a><span class="prop">USVI - #7</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13496410001" target="_blank" rel="noopener">[RapidEye] Shower glass block ledge mildew<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13496410003" target="_blank" rel="noopener">[RapidEye] Burnt candle on balcony side table<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13496716952" target="_blank" rel="noopener">[RapidEye] Yellowish stain on bed fitted sheet<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13517460383" target="_blank" rel="noopener">[P1] [RapidEye] Blue disposable lighter left inside pink snorkel mask in beach gear closet - remove<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13528393968" target="_blank" rel="noopener">[P2] [RapidEye] Full white trash bag left on outdoor stairs - remove<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li></ul></div>
+        <div class="issue-block down"><h3>Down origins (Maintenance completed ~7d) <span class="count">(25)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/11945795260" target="_blank" rel="noopener">[P2] 8.1.7 - Floors, Walls, Ceilings — Rotted Door Trim<span class="open-hint">↗</span></a><span class="prop">USVI</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/11918044244" target="_blank" rel="noopener">[P0] 3.8.1 - Porches, Patios, Decks, Balconies &amp; Carports<span class="open-hint">↗</span></a><span class="prop">USVI</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13484060513" target="_blank" rel="noopener">[P1] USVI #1 – rebecca clay AC pre-checkout recovery (out Nov 6) – Luna<span class="open-hint">↗</span></a><span class="prop">USVI - #1</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13399105903" target="_blank" rel="noopener">[P1] [GB55] USVI #1 — sofa bed collapses whenever it&#x27;s used (reported by cleaner Maria)<span class="open-hint">↗</span></a><span class="prop">USVI - #1</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13033140557" target="_blank" rel="noopener">[P2] Unit #2 — shower drain grid grouted over, install new grid (spares in storage room)<span class="open-hint">↗</span></a><span class="prop">USVI - #2</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13476124979" target="_blank" rel="noopener">[RapidEye] Exterior door weatherstripping degraded<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13491051775" target="_blank" rel="noopener">[RapidEye] Balcony floor paint peeling<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13491063429" target="_blank" rel="noopener">[RapidEye] Loose orange cable on outdoor stairs<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13492415164" target="_blank" rel="noopener">[RapidEye] Kitchen sink cabinet door misaligned<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13491046957" target="_blank" rel="noopener">[RapidEye] Floor lamp swing-arm detached<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13491046918" target="_blank" rel="noopener">[RapidEye] Bedroom AC grille loose<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13491064077" target="_blank" rel="noopener">[RapidEye] Sliding patio screen door misaligned<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13490999841" target="_blank" rel="noopener">[RapidEye] Kitchen cabinet laminate chipped<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13496104632" target="_blank" rel="noopener">[P0] [GB97] [RapidEye] USVI #3 — Smoke detector missing from wall bracket<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13476124981" target="_blank" rel="noopener">[RapidEye] Drywall chipped under wall-mounted unit<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13496395222" target="_blank" rel="noopener">[RapidEye] Bathroom door latch hardware exposed in uncovered slot<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13517446134" target="_blank" rel="noopener">[P1] [RapidEye] Kitchen wall-mounted mini-split AC (above fridge) does not turn on or respond to remote - inspect &amp; repair AC/remote<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13517460379" target="_blank" rel="noopener">[P1] [RapidEye] Left bifold closet door by dining table detached from track, resting on floor - reattach<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13528389399" target="_blank" rel="noopener">[P1] [RapidEye] Bedroom wall AC (GE) does not power on / unresponsive to remote - replace remote batteries and test unit<span class="open-hint">↗</span></a><span class="prop">USVI - #3</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13496342684" target="_blank" rel="noopener">[P1] [GB55] USVI #4 — cockroaches found by cleaner Maria (arrival today 11/7; #3 photo not parsed)<span class="open-hint">↗</span></a><span class="prop">USVI - #4</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13517448958" target="_blank" rel="noopener">[P1] [RapidEye] Patio sliding screen door stuck on track (does not close) + torn/detached and creased mesh - repair track/rollers &amp; rescreen<span class="open-hint">↗</span></a><span class="prop">USVI - #4</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13517448956" target="_blank" rel="noopener">[P1] [RapidEye] Standing water + dark green algae on exterior concrete walkway - pressure wash (check drainage)<span class="open-hint">↗</span></a><span class="prop">USVI - #4</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13521271006" target="_blank" rel="noopener">Unit size, lighting and view not as expected; TV language setting issue; missing soap in shower.<span class="open-hint">↗</span></a><span class="prop">USVI - #4</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13517460705" target="_blank" rel="noopener">[P1] [RapidEye] Several kitchen recessed ceiling lights out while others are on - replace bulbs<span class="open-hint">↗</span></a><span class="prop">USVI - #4</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13517460475" target="_blank" rel="noopener">[P2] [RapidEye] Chipped &amp; worn paint on teal wooden step trim on deck - sand &amp; repaint<span class="open-hint">↗</span></a><span class="prop">USVI - #4</span></li></ul></div>
+      </article>
+
+      <article class="region-card">
+        <header><div><h2>France</h2><p class="owner">Owner: Baptiste Sarrat</p></div></header>
+        <div class="issue-block stuck"><h3>Stuck / Escalated <span class="count">(1)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Listings Upd</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18410221107/pulses/12668132502" target="_blank" rel="noopener">Listing Taxes: city tax has to be paid on-site<span class="open-hint">↗</span></a><span class="prop">France - VF</span></li></ul></div>
+        <div class="issue-block up"><h3>Up origins (Bad Reviews + Cleaning active) <span class="count">(3)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13525609182" target="_blank" rel="noopener">[P3] [RapidEye] Dark mildew spots on upper shower wall grout and ceiling joint above shower head - clean<span class="open-hint">↗</span></a><span class="prop">France - Rosiers</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13525609811" target="_blank" rel="noopener">[P3] [RapidEye] Dark mildew buildup along vertical corner grout line in shower (pre-existing) - scrub and treat<span class="open-hint">↗</span></a><span class="prop">France - Rosiers</span></li><li class="linked-row"><span class="board-tag">Cleaning</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401058709/pulses/13525608874" target="_blank" rel="noopener">[P2] [RapidEye] Plastic bag / trash left on floor near corner of the stairs - remove<span class="open-hint">↗</span></a><span class="prop">France - VDT</span></li></ul></div>
+        <div class="issue-block down"><h3>Down origins (Maintenance completed ~7d) <span class="count">(2)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13495970214" target="_blank" rel="noopener">Offline: Blink VDT – France - VDT (doorbell)<span class="open-hint">↗</span></a><span class="prop">France - VDT</span></li><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13498187672" target="_blank" rel="noopener">Intermittent or no internet connectivity and Lovebox device error message<span class="open-hint">↗</span></a><span class="prop">France - VF</span></li></ul></div>
+      </article>
+
+      <article class="region-card">
+        <header><div><h2>Miami</h2><p class="owner">Owner: Baptiste Sarrat</p></div></header>
+        <div class="issue-block stuck"><h3>Stuck / Escalated <span class="count">(0)</span></h3><ul class="issue-links"><li class="empty">None in this snapshot</li></ul></div>
+        <div class="issue-block up"><h3>Up origins (Bad Reviews + Cleaning active) <span class="count">(0)</span></h3><ul class="issue-links"><li class="empty">None in this snapshot</li></ul></div>
+        <div class="issue-block down"><h3>Down origins (Maintenance completed ~7d) <span class="count">(1)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13498180148" target="_blank" rel="noopener">Missing Nespresso coffee machine in accommodation<span class="open-hint">↗</span></a><span class="prop">Miami</span></li></ul></div>
+      </article>
+
+      <article class="region-card account-block">
+        <header><div><h2>Unmapped</h2><p class="owner">Account-level / unmapped</p></div></header>
+        <div class="issue-block stuck"><h3>Stuck / Escalated <span class="count">(2)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Cristina Tas</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18405772437/pulses/13002757203" target="_blank" rel="noopener">Last-minute purchase wasn’t flagged on Slack.<span class="open-hint">↗</span></a></li><li class="linked-row"><span class="board-tag">Cristina Tas</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18405772437/pulses/12462214610" target="_blank" rel="noopener">Listings update on VRBO and Expedia<span class="open-hint">↗</span></a></li></ul></div>
+        <div class="issue-block up"><h3>Up origins (Bad Reviews + Cleaning active) <span class="count">(0)</span></h3><ul class="issue-links"><li class="empty">None in this snapshot</li></ul></div>
+        <div class="issue-block down"><h3>Down origins (Maintenance completed ~7d) <span class="count">(1)</span></h3><ul class="issue-links"><li class="linked-row"><span class="board-tag">Maintenance</span><a class="item-link" href="https://bijougetaways.monday.com/boards/18401061908/pulses/13435321643" target="_blank" rel="noopener">Guest problems unresolved &gt;48 hrs (current 13)<span class="open-hint">↗</span></a></li></ul></div>
+      </article>
+      </div>
+      <div class="issue-footer">
+        <div>Pulse URL pattern: <code>https://bijougetaways.monday.com/boards/{boardId}/pulses/{itemId}</code></div>
+        <div>Refreshed Thu Nov 12, 2026 08:55 PM PT · private flagged-issue metrics not included</div>
+      </div>
+    </div>
+
+    <footer>
+      <div>Team dashboard (one link): <a href="https://bijougetaways.monday.com/dashboards/39665947" target="_blank" rel="noopener">https://bijougetaways.monday.com/dashboards/39665947</a></div>
+      <div>Supporting board: Ops Health — Weekly · 18432600601 · owners Hawaii=Luis Francisco Medina · Napa=Luis Francisco Medina · USVI=Luna Proietti · France/Miami=Baptiste Sarrat</div>
+      <div>Weekly run (Nov 12 slot, Thu night) · snapshot Thu Nov 12, 2026 08:55 PM PT</div>
+    </footer>
+  </div>
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.tab-btn');
+  var panels = {
+    overview: document.getElementById('panel-overview'),
+    issues: document.getElementById('panel-issues')
+  };
+  function activate(name){
+    tabs.forEach(function(btn){
+      var on = btn.getAttribute('data-tab') === name;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    Object.keys(panels).forEach(function(k){
+      if (!panels[k]) return;
+      if (k === name) panels[k].removeAttribute('hidden');
+      else panels[k].setAttribute('hidden', '');
+    });
+    try { history.replaceState(null, '', '#' + name); } catch(e) {}
+  }
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){ activate(btn.getAttribute('data-tab')); });
+  });
+  var hash = (location.hash || '').replace(/^#/, '');
+  if (hash === 'issues' || hash === 'issue-links') activate('issues');
+  else activate('overview');
+})();
+</script>
+</body>
+</html>
